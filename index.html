@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>청년정책 — 복잡한 청년 정책, 쉽게 찾아드려요</title>
+<meta name="description" content="청년을 위한 정책과 복지 정보를 한눈에. 지역, 나이, 필요에 맞는 맞춤 정책을 찾아보세요.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-info: #e8f0fe;
+  --text-primary: #1a1a1a;
+  --text-secondary: #5f6368;
+  --text-tertiary: #9aa0a6;
+  --border-primary: #dadce0;
+  --border-secondary: #e8eaed;
+  --border-tertiary: #f1f3f4;
+  --accent: #185FA5;
+  --accent-light: #E6F1FB;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #1e1e1e;
+    --bg-secondary: #2a2a2a;
+    --bg-info: #1a2a3a;
+    --text-primary: #e3e3e3;
+    --text-secondary: #a0a0a0;
+    --text-tertiary: #6b6b6b;
+    --border-primary: #444;
+    --border-secondary: #383838;
+    --border-tertiary: #333;
+    --accent-light: #1a2a3a;
+  }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg-secondary); color: var(--text-primary); }
+.app { display: flex; flex-direction: column; height: 100vh; background: var(--bg-primary); }
+
+/* ===== TOPBAR ===== */
+.topbar { display: flex; align-items: center; gap: 16px; padding: 12px 20px; border-bottom: 1px solid var(--border-tertiary); background: var(--bg-primary); position: relative; z-index: 10; flex-shrink: 0; }
+.logo { font-size: 17px; font-weight: 600; color: var(--text-primary); white-space: nowrap; cursor: pointer; user-select: none; transition: opacity .15s; }
+.logo span { color: var(--accent); }
+.logo:hover { opacity: .7; }
+
+.search-outer { flex: 1; max-width: 560px; position: relative; }
+.search-box { display: flex; align-items: center; border: 1px solid var(--border-secondary); border-radius: var(--radius-md); overflow: hidden; background: var(--bg-secondary); transition: border-color .15s; }
+.search-box:focus-within { border-color: var(--accent); }
+.search-inp { flex: 1; padding: 0 14px; height: 38px; border: none; background: transparent; font-size: 14px; color: var(--text-primary); outline: none; font-family: inherit; }
+.search-inp::placeholder { color: var(--text-tertiary); }
+.search-btn { padding: 0 14px; height: 38px; background: var(--accent); border: none; cursor: pointer; display: flex; align-items: center; transition: opacity .15s; }
+.search-btn:hover { opacity: .85; }
+.search-btn i { font-size: 16px; color: #fff; }
+
+.search-dropdown { position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: var(--bg-primary); border: 1px solid var(--border-secondary); border-radius: var(--radius-md); z-index: 100; display: none; max-height: 360px; overflow-y: auto; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+.search-dropdown.open { display: block; }
+.sd-section { padding: 8px 0; }
+.sd-label { font-size: 11px; font-weight: 500; color: var(--text-tertiary); padding: 4px 14px 4px; letter-spacing: .04em; }
+.sd-item { display: flex; align-items: center; gap: 10px; padding: 8px 14px; cursor: pointer; font-size: 14px; color: var(--text-primary); transition: background .1s; }
+.sd-item:hover { background: var(--bg-secondary); }
+.sd-item i { font-size: 16px; color: var(--text-tertiary); flex-shrink: 0; }
+.sd-badge { font-size: 11px; padding: 2px 7px; border-radius: var(--radius-md); font-weight: 500; margin-left: auto; flex-shrink: 0; }
+.b-주거 { background: #E1F5EE; color: #085041; }
+.b-금융 { background: #FAEEDA; color: #633806; }
+.b-일자리 { background: #E6F1FB; color: #0C447C; }
+.b-교육 { background: #EEEDFE; color: #3C3489; }
+.b-복지 { background: #FAECE7; color: #712B13; }
+.sd-no { font-size: 14px; color: var(--text-tertiary); padding: 16px 14px; }
+.sd-hint { font-size: 12px; color: var(--text-tertiary); padding: 4px 14px 8px; cursor: pointer; }
+.sd-hint:hover { color: var(--accent); }
+
+/* ===== BODY ===== */
+.body { display: flex; flex: 1; min-height: 0; }
+
+/* ===== SIDEBAR ===== */
+.sidebar { width: 220px; min-width: 220px; border-right: 1px solid var(--border-tertiary); background: var(--bg-primary); transition: width .2s ease, min-width .2s ease; overflow: hidden; display: flex; flex-direction: column; }
+.sidebar.collapsed { width: 48px; min-width: 48px; }
+.hamburger { display: flex; align-items: center; gap: 10px; padding: 13px 14px 10px; cursor: pointer; user-select: none; border-bottom: 1px solid var(--border-tertiary); }
+.hamburger i { font-size: 20px; color: var(--text-secondary); flex-shrink: 0; }
+.h-label { font-size: 13px; font-weight: 500; color: var(--text-secondary); white-space: nowrap; }
+.sidebar.collapsed .h-label { display: none; }
+.menu-block { overflow-y: auto; flex: 1; }
+.m-group { border-bottom: 1px solid var(--border-tertiary); }
+.m-head { display: flex; align-items: center; gap: 10px; padding: 10px 14px; cursor: pointer; user-select: none; transition: background .1s; }
+.m-head:hover { background: var(--bg-secondary); }
+.m-head.active { background: var(--bg-info); }
+.m-head.active .mh-label { color: var(--accent); font-weight: 600; }
+.m-head.active .mh-icon { color: var(--accent); }
+.mh-icon { font-size: 18px; color: var(--text-secondary); flex-shrink: 0; }
+.mh-label { font-size: 14px; color: var(--text-secondary); white-space: nowrap; }
+.sidebar.collapsed .mh-label { display: none; }
+.sidebar.collapsed .m-head { justify-content: center; padding: 10px 0; }
+
+/* ===== MAIN ===== */
+.main { flex: 1; overflow-y: auto; min-width: 0; display: flex; flex-direction: column; }
+.view { display: none; flex: 1; padding: 28px 32px; overflow-y: auto; }
+.view.active { display: flex; flex-direction: column; }
+.main-title { font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; flex-shrink: 0; }
+.main-sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 24px; flex-shrink: 0; }
+
+/* ===== STEPS ===== */
+.step-bar { display: flex; align-items: center; margin-bottom: 28px; gap: 4px; flex-shrink: 0; }
+.s-item { display: flex; align-items: center; gap: 6px; }
+.s-num { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; border: 1.5px solid var(--border-secondary); color: var(--text-tertiary); background: var(--bg-primary); flex-shrink: 0; transition: all .2s; }
+.s-num.done { background: var(--accent); color: #fff; border-color: var(--accent); }
+.s-num.cur { border-color: var(--accent); color: var(--accent); }
+.s-lbl { font-size: 13px; color: var(--text-tertiary); }
+.s-lbl.cur { color: var(--accent); font-weight: 500; }
+.s-line { flex: 1; height: 1px; background: var(--border-tertiary); margin: 0 6px; }
+.panel { display: none; }
+.panel.active { display: block; }
+.step-q { font-size: 15px; font-weight: 500; color: var(--text-primary); margin-bottom: 16px; }
+
+.opt-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+.opt { border: 1.5px solid var(--border-secondary); border-radius: var(--radius-md); padding: 14px 8px; cursor: pointer; text-align: center; background: var(--bg-primary); transition: all .15s; }
+.opt:hover { border-color: var(--accent); }
+.opt.on { border-color: var(--accent); background: var(--accent-light); }
+.opt.on .ol { color: #0C447C; }
+.opt.on i { color: var(--accent); }
+.opt i { font-size: 22px; color: var(--text-tertiary); display: block; margin-bottom: 6px; }
+.ol { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+.os { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+
+.age-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+.age-btn { border: 1.5px solid var(--border-secondary); border-radius: var(--radius-md); padding: 12px; text-align: center; font-size: 14px; font-weight: 500; color: var(--text-primary); cursor: pointer; background: var(--bg-primary); transition: all .15s; }
+.age-btn:hover { border-color: var(--accent); }
+.age-btn.on { border-color: var(--accent); background: var(--accent-light); color: #0C447C; }
+
+.genre-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+.genre-btn { border: 1.5px solid var(--border-secondary); border-radius: var(--radius-md); padding: 12px 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 13px; color: var(--text-secondary); background: var(--bg-primary); transition: all .15s; }
+.genre-btn:hover { border-color: var(--accent); }
+.genre-btn.on { border-color: var(--accent); background: var(--accent-light); color: #0C447C; }
+.genre-btn i { font-size: 22px; }
+
+.nav-row { display: flex; gap: 10px; justify-content: flex-end; flex-shrink: 0; }
+.btn-back { font-size: 14px; padding: 9px 18px; border: 1px solid var(--border-secondary); border-radius: var(--radius-md); background: var(--bg-primary); color: var(--text-secondary); cursor: pointer; font-family: inherit; transition: background .1s; }
+.btn-back:hover { background: var(--bg-secondary); }
+.btn-next { font-size: 14px; padding: 9px 22px; border-radius: var(--radius-md); background: var(--accent); color: #fff; border: none; cursor: pointer; font-weight: 500; font-family: inherit; transition: opacity .15s; }
+.btn-next:hover { opacity: .88; }
+.btn-next:disabled { opacity: .3; cursor: not-allowed; }
+
+/* ===== RESULT GRID ===== */
+.result-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.rcard { background: var(--bg-primary); border: 1px solid var(--border-tertiary); border-radius: var(--radius-md); padding: 14px; cursor: pointer; transition: border-color .12s, box-shadow .12s; }
+.rcard:hover { border-color: var(--border-primary); box-shadow: 0 2px 8px rgba(0,0,0,.05); }
+.rcard-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.dot-g { width: 7px; height: 7px; border-radius: 50%; background: #639922; }
+.rt { font-size: 14px; font-weight: 500; color: var(--text-primary); margin-bottom: 4px; }
+.rd { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+.reset-btn { font-size: 13px; color: var(--accent); background: none; border: none; cursor: pointer; font-family: inherit; }
+
+/* ===== CATEGORY VIEW ===== */
+.cat-view-header { margin-bottom: 20px; flex-shrink: 0; }
+.cat-view-title { font-size: 18px; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.cat-view-title i { font-size: 22px; }
+.cat-view-sub { font-size: 13px; color: var(--text-secondary); }
+.policy-list { display: flex; flex-direction: column; gap: 12px; flex: 1; }
+.pcard { background: var(--bg-primary); border: 1px solid var(--border-tertiary); border-radius: var(--radius-lg); padding: 16px 20px; cursor: pointer; transition: border-color .12s, box-shadow .12s; }
+.pcard:hover { border-color: var(--border-primary); box-shadow: 0 2px 8px rgba(0,0,0,.05); }
+.pcard-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.tag { font-size: 11px; padding: 3px 8px; border-radius: var(--radius-md); font-weight: 500; }
+.t-모집중 { background: #EAF3DE; color: #27500A; }
+.t-상시 { background: #F1EFE8; color: #444441; }
+.pcard-title { font-size: 15px; font-weight: 500; color: var(--text-primary); margin-bottom: 4px; }
+.pcard-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.55; }
+.pcard-meta { display: flex; gap: 12px; margin-top: 10px; }
+.meta-item { font-size: 12px; color: var(--text-tertiary); display: flex; align-items: center; gap: 4px; }
+.meta-item i { font-size: 14px; }
+
+/* ===== DETAIL VIEW ===== */
+.detail-container { overflow-y: auto; flex: 1; }
+.detail-header { margin-bottom: 14px; flex-shrink: 0; }
+.detail-back { font-size: 13px; color: var(--accent); background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px; font-family: inherit; }
+.detail-back:hover { opacity: .7; }
+.detail-title { font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+.detail-tags { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.detail-banner { width: 100%; border-radius: var(--radius-lg); margin: 0 0 20px; overflow: hidden; }
+.detail-banner svg { width: 100%; display: block; }
+.detail-section { margin-bottom: 18px; }
+.detail-sec-title { font-size: 13px; font-weight: 600; color: var(--text-tertiary); margin-bottom: 6px; letter-spacing: .03em; }
+.detail-sec-content { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+.detail-link { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; background: var(--accent); color: #fff; border-radius: var(--radius-md); text-decoration: none; font-size: 13px; font-weight: 500; margin-top: 10px; transition: opacity .15s; }
+.detail-link:hover { opacity: .85; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .sidebar { width: 48px; min-width: 48px; }
+  .sidebar .mh-label, .sidebar .h-label { display: none; }
+  .sidebar .m-head { justify-content: center; padding: 10px 0; }
+  .view { padding: 20px 16px; }
+  .opt-grid { grid-template-columns: repeat(2, 1fr); }
+  .genre-grid { grid-template-columns: repeat(2, 1fr); }
+  .result-grid { grid-template-columns: 1fr; }
+  .topbar { padding: 10px 12px; gap: 10px; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="topbar">
+    <div class="logo" id="logo-btn">청년<span>정책</span></div>
+    <div class="search-outer">
+      <div class="search-box">
+        <input class="search-inp" id="search-inp" type="text" placeholder="정책 이름이나 키워드를 입력하세요..." autocomplete="off">
+        <button class="search-btn" onclick="executeSearch()"><i class="ti ti-search"></i></button>
+      </div>
+      <div class="search-dropdown" id="search-drop"><div id="drop-body"></div></div>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="sidebar" id="sidebar">
+      <div class="hamburger" onclick="handleHamburger()">
+        <i class="ti ti-menu-2"></i>
+        <span class="h-label">메뉴</span>
+      </div>
+      <div class="menu-block" id="menu-block"></div>
+    </div>
+
+    <div class="main">
+      <!-- HOME VIEW -->
+      <div class="view active" id="view-home">
+        <div class="main-title">나를 위한 정책 찾기</div>
+        <div class="main-sub">몇 가지만 답하면 딱 맞는 정책을 골라드려요</div>
+        <div class="step-bar">
+          <div class="s-item"><div class="s-num cur" id="sn1">1</div><div class="s-lbl cur" id="sl1">지역</div></div><div class="s-line"></div>
+          <div class="s-item"><div class="s-num" id="sn2">2</div><div class="s-lbl" id="sl2">나이</div></div><div class="s-line"></div>
+          <div class="s-item"><div class="s-num" id="sn3">3</div><div class="s-lbl" id="sl3">필요한 지원</div></div><div class="s-line"></div>
+          <div class="s-item"><div class="s-num" id="sn4">✓</div><div class="s-lbl" id="sl4">결과</div></div>
+        </div>
+        <div class="panel active" id="p1">
+          <div class="step-q">어느 지역에 살고 있나요?</div>
+          <div class="opt-grid">
+            <div class="opt" onclick="pick(this,'서울')"><i class="ti ti-building-skyscraper"></i><div class="ol">서울</div><div class="os">서울시+중앙</div></div>
+            <div class="opt" onclick="pick(this,'경기')"><i class="ti ti-trees"></i><div class="ol">경기·인천</div><div class="os">경기+중앙</div></div>
+            <div class="opt" onclick="pick(this,'기타광역시')"><i class="ti ti-building"></i><div class="ol">기타 광역시</div><div class="os">부산·대구 등</div></div>
+            <div class="opt" onclick="pick(this,'전국')"><i class="ti ti-map"></i><div class="ol">전국</div><div class="os">중앙정부만</div></div>
+          </div>
+          <div class="nav-row"><button class="btn-next" id="n1" onclick="goStep(2)" disabled>다음 →</button></div>
+        </div>
+        <div class="panel" id="p2">
+          <div class="step-q">나이를 선택해주세요</div>
+          <div class="age-row">
+            <div class="age-btn" onclick="pickAge(this,'19~24')">19~24세</div>
+            <div class="age-btn" onclick="pickAge(this,'25~29')">25~29세</div>
+            <div class="age-btn" onclick="pickAge(this,'30~34')">30~34세</div>
+            <div class="age-btn" onclick="pickAge(this,'35~39')">35~39세</div>
+          </div>
+          <div class="nav-row"><button class="btn-back" onclick="goStep(1)">← 이전</button><button class="btn-next" id="n2" onclick="goStep(3)" disabled>다음 →</button></div>
+        </div>
+        <div class="panel" id="p3">
+          <div class="step-q">어떤 지원이 필요한가요? <span style="font-size:12px;color:var(--text-tertiary);font-weight:400;">(복수 선택)</span></div>
+          <div class="genre-grid">
+            <div class="genre-btn" onclick="tog(this,'주거·월세')"><i class="ti ti-home" style="color:#0F6E56"></i>주거·월세</div>
+            <div class="genre-btn" onclick="tog(this,'취업·일자리')"><i class="ti ti-briefcase" style="color:#185FA5"></i>취업·일자리</div>
+            <div class="genre-btn" onclick="tog(this,'금융·학자금')"><i class="ti ti-coin" style="color:#854F0B"></i>금융·학자금</div>
+            <div class="genre-btn" onclick="tog(this,'교육·문화')"><i class="ti ti-book" style="color:#534AB7"></i>교육·문화</div>
+            <div class="genre-btn" onclick="tog(this,'마음건강')"><i class="ti ti-heart" style="color:#993556"></i>마음건강</div>
+            <div class="genre-btn" onclick="tog(this,'창업')"><i class="ti ti-rocket" style="color:#993C1D"></i>창업</div>
+          </div>
+          <div class="nav-row"><button class="btn-back" onclick="goStep(2)">← 이전</button><button class="btn-next" id="n3" onclick="showResult()" disabled>결과 보기 →</button></div>
+        </div>
+        <div class="panel" id="p4">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+            <div class="step-q" style="margin:0" id="rlabel">추천 정책</div>
+            <button class="reset-btn" onclick="resetSteps()"><i class="ti ti-refresh"></i> 다시 찾기</button>
+          </div>
+          <div class="result-grid" id="rgrid"></div>
+        </div>
+      </div>
+
+      <!-- CATEGORY VIEW -->
+      <div class="view" id="view-cat">
+        <div class="cat-view-header"><div class="cat-view-title"><i id="cat-icon"></i><span id="cat-title"></span></div><div class="cat-view-sub" id="cat-sub"></div></div>
+        <div class="policy-list" id="cat-policy-list"></div>
+      </div>
+
+      <!-- SEARCH VIEW -->
+      <div class="view" id="view-search">
+        <div style="margin-bottom:18px;flex-shrink:0;"><div style="font-size:16px;font-weight:600;color:var(--text-primary);" id="search-result-label">검색 결과</div></div>
+        <div class="policy-list" id="search-policy-list"></div>
+      </div>
+
+      <!-- DETAIL VIEW -->
+      <div class="view" id="view-detail">
+        <div class="detail-container">
+          <div class="detail-header"><button class="detail-back" onclick="goBack()"><i class="ti ti-arrow-left"></i>돌아가기</button></div>
+          <div class="detail-title" id="dt-title"></div>
+          <div class="detail-tags" id="dt-tags"></div>
+          <div class="detail-banner" id="dt-banner"></div>
+          <div class="detail-section"><div class="detail-sec-title">정책 설명</div><div class="detail-sec-content" id="dt-desc"></div></div>
+          <div class="detail-section"><div class="detail-sec-title">지원 내용</div><div class="detail-sec-content" id="dt-benefit"></div></div>
+          <div class="detail-section"><div class="detail-sec-title">대상</div><div class="detail-sec-content" id="dt-target"></div></div>
+          <div class="detail-section"><div class="detail-sec-title">신청 방법</div><div class="detail-sec-content" id="dt-apply"></div><a class="detail-link" id="dt-link" target="_blank" href="#"><i class="ti ti-external-link"></i>공식 웹사이트 방문</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== 정책 데이터 (여기서 추가/수정하세요!) =====
+const DB=[
+{t:'청년수당',c:'금융',r:['서울'],a:['19~24','25~29','30~34'],g:['금융·학자금'],d:'미취업 청년 월 50만원, 최대 6개월 지원.',s:'모집중',tg:'미취업 청년',desc:'서울시에서 제공하는 청년수당은 경제활동을 지원하기 위한 정책입니다. 취업 준비 중이거나 생계 유지가 어려운 청년들을 위해 설계되었습니다.',bn:'월 50만원씩 최대 6개월 (총 300만원)',ap:'서울시청 또는 청년몽땅정보통 온라인 신청',lk:'https://youth.seoul.go.kr',ic:'coin',cl:'#854F0B'},
+{t:'청년 월세 지원',c:'주거',r:['서울','경기','전국'],a:['19~24','25~29','30~34','35~39'],g:['주거·월세'],d:'월 최대 20만원, 12개월 지원.',s:'모집중',tg:'만 19~39세',desc:'청년들의 주거 안정을 위해 월세 부담을 덜어주는 정책입니다.',bn:'월 최대 20만원, 12개월 (총 240만원)',ap:'주민센터 또는 복지로 온라인 신청',lk:'https://www.bokjiro.go.kr',ic:'home',cl:'#0F6E56'},
+{t:'희망두배 청년통장',c:'금융',r:['서울'],a:['19~24','25~29'],g:['금융·학자금'],d:'월 10만원 저축 시 서울시가 동일 금액 추가 지급.',s:'상시',tg:'저소득 청년',desc:'자산형성을 지원하는 매칭 저축 정책입니다.',bn:'월 10만원 저축 시 서울시 10만원 추가',ap:'은행 방문 또는 온라인 신청',lk:'https://youth.seoul.go.kr',ic:'coin',cl:'#854F0B'},
+{t:'청년취업사관학교',c:'일자리',r:['서울'],a:['19~24','25~29','30~34'],g:['취업·일자리'],d:'IT·디지털 무료 집중 훈련, 취업 연계까지.',s:'모집중',tg:'미취업 청년',desc:'ICT 산업 취업을 위한 집중 교육 프로그램입니다.',bn:'4주 집중 훈련 + 취업 연계 (무료)',ap:'청년취업사관학교 홈페이지 신청',lk:'https://youth.seoul.go.kr',ic:'briefcase',cl:'#185FA5'},
+{t:'청년안심주택',c:'주거',r:['서울'],a:['19~24','25~29','30~34','35~39'],g:['주거·월세'],d:'역세권 시세 30~85% 청년 전용 공공임대주택.',s:'상시',tg:'만 19~39세',desc:'서울 지하철역 근처에 위치한 공공임대주택입니다.',bn:'시세의 30~85% 수준 임차료',ap:'LH 청약센터 또는 온라인 신청',lk:'https://www.lh.or.kr',ic:'home',cl:'#0F6E56'},
+{t:'학자금대출 이자 지원',c:'교육',r:['서울'],a:['19~24','25~29'],g:['금융·학자금','교육·문화'],d:'재학·졸업 후 학자금 이자를 서울시가 대신 납부.',s:'상시',tg:'대학(원)생',desc:'학자금 대출로 인한 이자 부담을 줄여주는 정책입니다.',bn:'학자금 대출 이자 전액 또는 일부 납부',ap:'대학 학생지원팀 신청',lk:'https://youth.seoul.go.kr',ic:'book',cl:'#534AB7'},
+{t:'청년 마음건강 지원',c:'복지',r:['서울'],a:['19~24','25~29','30~34','35~39'],g:['마음건강'],d:'심리상담 10회 무료, 정신건강의학과 연계.',s:'모집중',tg:'만 19~39세',desc:'청년들의 정신 건강을 위해 전문 심리상담을 제공합니다.',bn:'심리상담 10회 무료, 의료 연계',ap:'지역사회보건센터 방문 또는 전화 신청',lk:'https://youth.seoul.go.kr',ic:'heart',cl:'#993556'},
+{t:'청년문화패스',c:'교육',r:['서울'],a:['19~24'],g:['교육·문화'],d:'공연·전시·영화 연 20만원 지원.',s:'모집중',tg:'만 19~24세',desc:'문화생활 기회를 제공하는 정책입니다.',bn:'공연·전시·영화관 이용료 연 20만원',ap:'온라인 신청 후 카드 발급',lk:'https://youth.seoul.go.kr',ic:'book',cl:'#534AB7'},
+{t:'청년전세임대주택',c:'주거',r:['서울','전국'],a:['19~24','25~29','30~34'],g:['주거·월세'],d:'LH가 전세계약 후 저렴하게 재임대.',s:'상시',tg:'무주택 청년',desc:'LH가 전세금을 지원하고 청년이 저렴한 임차료로 거주합니다.',bn:'보증금 최소화, 저렴한 임차료',ap:'LH 또는 지역 청약센터 신청',lk:'https://www.lh.or.kr',ic:'home',cl:'#0F6E56'},
+{t:'고립·은둔청년 지원',c:'복지',r:['서울'],a:['19~24','25~29','30~34'],g:['마음건강'],d:'전담 매니저 배정, 활동지원금 월 50만원.',s:'상시',tg:'고립·은둔 청년',desc:'사회적 고립 상태에 있는 청년들을 위한 맞춤 지원 프로그램입니다.',bn:'전담 매니저 배정 + 월 50만원 활동지원금',ap:'주민센터 또는 복지센터 신청',lk:'https://youth.seoul.go.kr',ic:'heart',cl:'#993556'},
+{t:'청년내일저축계좌',c:'금융',r:['전국'],a:['19~24','25~29','30~34'],g:['금융·학자금'],d:'월 10만원 저축 시 정부 최대 30만원 매칭.',s:'상시',tg:'저소득 청년',desc:'저소득 청년의 자산형성을 적극 지원합니다.',bn:'월 10만원 저축 시 정부 최대 30만원 매칭',ap:'우체국 또는 은행 방문 신청',lk:'https://www.bokjiro.go.kr',ic:'coin',cl:'#854F0B'},
+{t:'서울캠퍼스타운',c:'일자리',r:['서울'],a:['19~24','25~29'],g:['창업'],d:'대학가 창업 인큐베이팅. 공간·멘토링 무료.',s:'모집중',tg:'예비창업자',desc:'대학가 중심의 창업 지원 공간입니다.',bn:'사무실 제공 + 멘토링 무료',ap:'캠퍼스타운 홈페이지 신청',lk:'https://youth.seoul.go.kr',ic:'rocket',cl:'#993C1D'},
+{t:'부동산 중개보수 지원',c:'주거',r:['서울'],a:['19~24','25~29','30~34','35~39'],g:['주거·월세'],d:'이사 시 중개수수료·이사비 일부 지원.',s:'모집중',tg:'만 19~39세',desc:'이주 과정의 경제적 부담을 덜어줍니다.',bn:'중개수수료·이사비 일부 지원',ap:'주민센터 신청',lk:'https://youth.seoul.go.kr',ic:'home',cl:'#0F6E56'},
+{t:'미래 청년 일자리',c:'일자리',r:['서울'],a:['19~24','25~29','30~34'],g:['취업·일자리'],d:'서울시 공공기관 단기 일자리 연계.',s:'모집중',tg:'미취업 청년',desc:'공공부문 경력 형성 기회를 제공합니다.',bn:'단기 일자리 연계',ap:'공고 확인 후 신청',lk:'https://youth.seoul.go.kr',ic:'briefcase',cl:'#185FA5'},
+{t:'전세자금 대출 지원',c:'주거',r:['서울','경기','전국'],a:['19~24','25~29','30~34','35~39'],g:['주거·월세'],d:'전세 시 무이자/저이율 대출. 최대 2억원.',s:'상시',tg:'만 34세 이하',desc:'주택 전세 시 금융 지원을 제공합니다.',bn:'최대 2억원 저이율 대출',ap:'은행 또는 주택도시기금 신청',lk:'https://nhuf.molit.go.kr',ic:'home',cl:'#0F6E56'},
+{t:'일자리 도약 장려금',c:'일자리',r:['서울','경기'],a:['19~24','25~29','30~34'],g:['취업·일자리'],d:'정규직 취업 후 월 20만원, 최대 1년.',s:'모집중',tg:'미취업 청년',desc:'취업 성공을 격려하는 장려금입니다.',bn:'월 20만원, 최대 1년',ap:'취업 후 고용센터 신청',lk:'https://www.work.go.kr',ic:'briefcase',cl:'#185FA5'},
+{t:'청년 창업 자금 지원',c:'일자리',r:['서울','전국'],a:['25~29','30~34','35~39'],g:['창업'],d:'창업 초기 운영자금 최대 5,000만원 무이자 대출.',s:'상시',tg:'예비·초기 창업자',desc:'창업 초기의 자금 부담을 덜어줍니다.',bn:'최대 5,000만원 무이자 대출',ap:'창업진흥원 신청',lk:'https://www.kosba.or.kr',ic:'rocket',cl:'#993C1D'},
+{t:'청년 귀농귀촌 지원',c:'금융',r:['전국'],a:['19~24','25~29','30~34','35~39'],g:['금융·학자금'],d:'농촌 정착금 3,000만원, 영농 교육 무료.',s:'상시',tg:'귀농귀촌 청년',desc:'농촌으로의 청년 정착을 장려합니다.',bn:'정착금 3,000만원 + 교육',ap:'농업기술센터 신청',lk:'https://www.returnfarm.com',ic:'coin',cl:'#854F0B'},
+{t:'서울청년 문화누리카드',c:'교육',r:['서울'],a:['19~24','25~29','30~34'],g:['교육·문화'],d:'문화생활 연 30만원 지원.',s:'모집중',tg:'서울 거주 청년',desc:'다양한 문화생활 경험을 지원합니다.',bn:'연 30만원 문화비 지원',ap:'온라인 신청',lk:'https://youth.seoul.go.kr',ic:'book',cl:'#534AB7'},
+{t:'청년 해외 인턴십',c:'일자리',r:['전국'],a:['19~24','25~29'],g:['취업·일자리'],d:'해외 기업 인턴십 3~6개월, 월 150만원 생활비.',s:'모집중',tg:'대학생·졸업생',desc:'글로벌 경력 형성 기회를 제공합니다.',bn:'월 150만원 생활비 + 경험',ap:'KOTRA 또는 외교부 신청',lk:'https://www.kotra.or.kr',ic:'briefcase',cl:'#185FA5'},
+{t:'청년 역량 강화 교육',c:'교육',r:['서울','경기'],a:['19~24','25~29','30~34'],g:['교육·문화'],d:'직업 스킬, 금융, 진로 등 무료 교육.',s:'상시',tg:'만 19~34세',desc:'청년들의 직무 역량을 강화합니다.',bn:'무료 교육 프로그램',ap:'온라인 또는 청년센터 신청',lk:'https://youth.seoul.go.kr',ic:'book',cl:'#534AB7'},
+{t:'월세 지원 확대 정책',c:'주거',r:['전국'],a:['19~24','25~29','30~34','35~39'],g:['주거·월세'],d:'연소득 5,000만원 이하 청년에게 월 최대 40만원.',s:'모집중',tg:'저소득 청년가구',desc:'취약 청년 가구의 주거비 부담을 줄입니다.',bn:'월 최대 40만원 지원',ap:'주민센터 신청',lk:'https://www.bokjiro.go.kr',ic:'home',cl:'#0F6E56'},
+{t:'청년 실업 수당',c:'금융',r:['전국'],a:['25~29','30~34'],g:['금융·학자금'],d:'실업 중 월 50만원, 최대 6개월.',s:'모집중',tg:'실업 상태 청년',desc:'실업 중의 생활비를 지원합니다.',bn:'월 50만원, 최대 6개월',ap:'고용센터 신청',lk:'https://www.work.go.kr',ic:'coin',cl:'#854F0B'},
+{t:'청년 건강검진 지원',c:'복지',r:['서울'],a:['19~24','25~29','30~34'],g:['마음건강'],d:'정기 건강검진 비용 전액 지원.',s:'상시',tg:'청년 근로자',desc:'청년 근로자의 건강을 관리합니다.',bn:'건강검진 비용 전액 지원 (연 1회)',ap:'보건센터 신청',lk:'https://youth.seoul.go.kr',ic:'heart',cl:'#993556'},
+{t:'청년 금융교육',c:'금융',r:['전국'],a:['19~24','25~29'],g:['금융·학자금'],d:'투자, 저축, 신용관리 등 금융 리터러시 교육.',s:'상시',tg:'만 19~29세',desc:'금융 지식 습득을 돕습니다.',bn:'무료 금융 교육',ap:'금융감독원 신청',lk:'https://www.fss.or.kr',ic:'coin',cl:'#854F0B'},
+{t:'청년 창업 보육센터',c:'일자리',r:['서울','경기'],a:['25~29','30~34','35~39'],g:['창업'],d:'사무실 제공, 멘토링, 컨설팅 무료.',s:'상시',tg:'초기 창업자',desc:'창업 초기의 사무 공간 및 지원을 제공합니다.',bn:'오피스 공간 + 멘토링 무료',ap:'창업센터 신청',lk:'https://youth.seoul.go.kr',ic:'rocket',cl:'#993C1D'},
+{t:'사회보험료 지원',c:'금융',r:['서울'],a:['19~24','25~29','30~34'],g:['금융·학자금'],d:'고용·국민연금 보험료 일부 지원.',s:'모집중',tg:'저소득 근로자',desc:'사회보험 부담을 덜어줍니다.',bn:'월 5만원 내 보험료 지원',ap:'고용센터 신청',lk:'https://youth.seoul.go.kr',ic:'coin',cl:'#854F0B'},
+{t:'청년 전문기술 교육',c:'교육',r:['전국'],a:['19~24','25~29','30~34'],g:['취업·일자리'],d:'공학, IT, 반도체 등 전문기술 교육 무료.',s:'상시',tg:'미취업·전직 청년',desc:'최신 기술 교육을 무료로 제공합니다.',bn:'무료 기술 교육 + 수료증',ap:'직업훈련포털(HRD-Net) 신청',lk:'https://www.hrd.go.kr',ic:'book',cl:'#534AB7'},
+{t:'청년 주택 구입 지원금',c:'주거',r:['서울'],a:['30~34','35~39'],g:['주거·월세'],d:'주택 구입 시 최대 3,000만원 지원.',s:'모집중',tg:'만 34~39세',desc:'주택 구입 자금 부담을 줄여줍니다.',bn:'최대 3,000만원 지원',ap:'주택도시기금 신청',lk:'https://nhuf.molit.go.kr',ic:'home',cl:'#0F6E56'},
+{t:'맞춤형 취업 상담',c:'일자리',r:['서울','경기'],a:['19~24','25~29','30~34'],g:['취업·일자리'],d:'전문 상담사 1대1 취업 멘토링.',s:'상시',tg:'구직자',desc:'개인 맞춤형 취업 상담을 제공합니다.',bn:'월 2회 1:1 멘토링',ap:'고용센터 방문 신청',lk:'https://www.work.go.kr',ic:'briefcase',cl:'#185FA5'},
+{t:'청년 자격증 취득 지원',c:'교육',r:['서울'],a:['19~24','25~29','30~34'],g:['취업·일자리'],d:'국가공인 자격증 응시료·교육비 50% 지원.',s:'모집중',tg:'만 19~34세',desc:'자격증 취득 비용을 경제적으로 지원합니다.',bn:'응시료·교육비 50% 지원',ap:'교육기관 신청',lk:'https://youth.seoul.go.kr',ic:'book',cl:'#534AB7'},
+{t:'중소기업 취업 장려금',c:'일자리',r:['전국'],a:['19~24','25~29','30~34'],g:['취업·일자리'],d:'중소기업 입사 시 월 20만원, 최대 2년.',s:'상시',tg:'구직자',desc:'중소기업 취업을 장려합니다.',bn:'월 20만원, 최대 2년',ap:'고용센터 신청',lk:'https://www.work.go.kr',ic:'briefcase',cl:'#185FA5'},
+{t:'벤처 투자 지원',c:'금융',r:['서울','경기'],a:['25~29','30~34','35~39'],g:['창업'],d:'스타트업 투자 연계, 최대 5억원 규모.',s:'상시',tg:'청년 창업가',desc:'벤처 창업가에게 투자 기회를 제공합니다.',bn:'최대 5억원 투자 연계',ap:'창업진흥원 신청',lk:'https://www.kosba.or.kr',ic:'rocket',cl:'#993C1D'},
+{t:'정신건강 상담실',c:'복지',r:['서울'],a:['19~24','25~29','30~34','35~39'],g:['마음건강'],d:'무료 심리상담, 스트레스·우울증 관리.',s:'상시',tg:'만 19~39세',desc:'정신 건강 관리를 위한 전문 상담을 제공합니다.',bn:'무료 심리상담 제공',ap:'정신건강센터 방문 신청',lk:'https://youth.seoul.go.kr',ic:'heart',cl:'#993556'},
+{t:'근로자 기숙사 지원',c:'주거',r:['서울','경기'],a:['19~24','25~29'],g:['주거·월세'],d:'기숙사 제공 및 월 20만원 숙박료 지원.',s:'상시',tg:'저소득 근로자',desc:'저소득 근로자의 주거 안정을 지원합니다.',bn:'기숙사 제공 + 월 20만원',ap:'기업 또는 관리처 신청',lk:'https://youth.seoul.go.kr',ic:'home',cl:'#0F6E56'},
+{t:'아르바이트 근로기준 교육',c:'교육',r:['전국'],a:['19~24','25~29'],g:['취업·일자리'],d:'근로 기준, 임금, 권리 보호 교육 무료.',s:'상시',tg:'아르바이트 청년',desc:'근로자 권리 보호 교육을 제공합니다.',bn:'무료 권리 교육',ap:'고용센터 또는 온라인 신청',lk:'https://www.work.go.kr',ic:'book',cl:'#534AB7'},
+{t:'청년 이직 지원금',c:'금융',r:['서울'],a:['25~29','30~34','35~39'],g:['금융·학자금'],d:'더 좋은 일자리로 이직 시 최대 200만원.',s:'모집중',tg:'경력자',desc:'경력 개발을 위한 이직을 지원합니다.',bn:'최대 200만원 지원',ap:'고용센터 신청',lk:'https://www.work.go.kr',ic:'coin',cl:'#854F0B'},
+{t:'공무원 준비생 지원',c:'교육',r:['서울','경기'],a:['19~24','25~29','30~34'],g:['취업·일자리'],d:'공무원 시험 학원비 50% 환급.',s:'모집중',tg:'공무원 준비생',desc:'공무원 시험 준비를 경제적으로 지원합니다.',bn:'학원비 50% 환급, 최대 300만원',ap:'교육청 신청',lk:'https://youth.seoul.go.kr',ic:'book',cl:'#534AB7'},
+{t:'가족돌봄 휴직 지원',c:'복지',r:['서울'],a:['25~29','30~34','35~39'],g:['마음건강'],d:'부모·형제 돌봄 시 월 100만원, 최대 6개월.',s:'상시',tg:'가족돌봄 청년',desc:'가족 돌봄으로 인한 경제적 부담을 줄입니다.',bn:'월 100만원, 최대 6개월',ap:'복지센터 또는 관계기관 신청',lk:'https://youth.seoul.go.kr',ic:'heart',cl:'#993556'},
+{t:'보금자리론',c:'주거',r:['서울','경기','전국'],a:['19~24','25~29','30~34','35~39'],g:['주거·월세'],d:'최대 2억원 저이율 대출.',s:'상시',tg:'만 34세 이하 무주택자',desc:'주택 마련의 진입 장벽을 낮춥니다.',bn:'최대 2억원 저이율 대출',ap:'주택금융공사 신청',lk:'https://www.hf.go.kr',ic:'home',cl:'#0F6E56'},
+{t:'예술 활동 지원금',c:'교육',r:['서울'],a:['19~24','25~29','30~34'],g:['교육·문화'],d:'음악·미술·공연 활동비 월 50만원, 최대 12개월.',s:'모집중',tg:'청년 예술인',desc:'예술 활동 경험을 지원합니다.',bn:'월 50만원, 최대 12개월',ap:'서울문화재단 신청',lk:'https://www.sfac.or.kr',ic:'book',cl:'#534AB7'},
+{t:'농촌 정착 주택 지원',c:'주거',r:['전국'],a:['19~24','25~29','30~34'],g:['주거·월세'],d:'시골 정착 시 주택 매입·개선비 최대 5,000만원.',s:'상시',tg:'귀농귀촌 청년',desc:'농촌 지역 정착을 경제적으로 지원합니다.',bn:'최대 5,000만원 지원',ap:'농업기술센터 신청',lk:'https://www.returnfarm.com',ic:'home',cl:'#0F6E56'},
+{t:'디지털 일자리',c:'일자리',r:['서울','전국'],a:['19~24','25~29','30~34'],g:['취업·일자리'],d:'개발, UX/UI, 데이터 분석 등 온라인 직무 연계.',s:'모집중',tg:'IT 관심 청년',desc:'디지털 직무의 경험을 제공합니다.',bn:'다양한 온라인 직무 기회',ap:'고용센터 또는 온라인 신청',lk:'https://www.work.go.kr',ic:'briefcase',cl:'#185FA5'},
+{t:'청년 양육 수당',c:'금융',r:['서울'],a:['25~29','30~34','35~39'],g:['금융·학자금'],d:'자녀 양육 시 월 100만원, 최대 36개월.',s:'상시',tg:'양육 중인 청년',desc:'양육 부담을 경제적으로 지원합니다.',bn:'월 100만원, 최대 36개월',ap:'동사무소 또는 복지로 신청',lk:'https://www.bokjiro.go.kr',ic:'coin',cl:'#854F0B'},
+{t:'기술승계 지원',c:'일자리',r:['서울','경기'],a:['25~29','30~34','35~39'],g:['취업·일자리'],d:'장인 기술 배우기, 월 300만원+교육비.',s:'상시',tg:'기술 지망 청년',desc:'전통 기술 승계를 경제적으로 지원합니다.',bn:'월 300만원 + 교육비',ap:'기술센터 신청',lk:'https://youth.seoul.go.kr',ic:'briefcase',cl:'#185FA5'},
+{t:'소상공인 창업 패키지',c:'일자리',r:['전국'],a:['25~29','30~34','35~39'],g:['창업'],d:'점포 임차료 3개월+초기운영자금 2,000만원.',s:'모집중',tg:'소상공인 창업자',desc:'소상공인 창업의 초기 비용을 지원합니다.',bn:'임차료 3개월 + 2,000만원',ap:'소상공인시장진흥공단 신청',lk:'https://www.semas.or.kr',ic:'rocket',cl:'#993C1D'},
+{t:'복지 통합 상담',c:'복지',r:['서울'],a:['19~24','25~29','30~34','35~39'],g:['마음건강'],d:'일자리·주거·금융·건강 전분야 무료 상담.',s:'상시',tg:'만 19~39세 누구나',desc:'청년 삶 전반에 대한 통합 상담을 제공합니다.',bn:'전분야 무료 상담',ap:'청년센터 방문 신청',lk:'https://youth.seoul.go.kr',ic:'heart',cl:'#993556'},
+];
+
+// ===== 카테고리 설정 =====
+const CATS=[
+  {key:'주거',label:'주거·월세',icon:'ti-home',color:'#0F6E56',sub:'전·월세, 공공임대, 주거비 지원 정책',filter:p=>p.c==='주거'},
+  {key:'일자리',label:'취업·일자리',icon:'ti-briefcase',color:'#185FA5',sub:'취업 지원, 인턴, 창업 정책',filter:p=>p.c==='일자리'},
+  {key:'금융',label:'금융·학자금',icon:'ti-coin',color:'#854F0B',sub:'청년수당, 저축, 학자금, 금융 지원',filter:p=>p.c==='금융'||p.g.includes('금융·학자금')},
+  {key:'교육',label:'교육·문화',icon:'ti-book',color:'#534AB7',sub:'문화패스, 장학금, 교육훈련 정책',filter:p=>p.c==='교육'},
+  {key:'복지',label:'마음건강',icon:'ti-heart',color:'#993556',sub:'심리상담, 고립청년, 복지 지원 정책',filter:p=>p.c==='복지'},
+];
+
+// ===== 상태 변수 =====
+let selR='',selA='',selG=[],sideOpen=true,prevView='home';
+
+// ===== 배너 SVG 생성 =====
+function makeBanner(p){
+  const icons={home:'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',briefcase:'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4',coin:'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',book:'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',heart:'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z',rocket:'M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z'};
+  const path=icons[p.ic]||icons.book;
+  return `<svg viewBox="0 0 700 180" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${p.cl}" stop-opacity="0.06"/><stop offset="100%" stop-color="${p.cl}" stop-opacity="0.15"/></linearGradient></defs><rect width="700" height="180" fill="url(#bg)" rx="12"/><svg x="30" y="45" width="90" height="90" viewBox="0 0 24 24" fill="none" stroke="${p.cl}" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="${path}"/></svg><text x="150" y="82" fill="${p.cl}" font-size="22" font-weight="600" font-family="Pretendard,sans-serif">${p.t}</text><text x="150" y="110" fill="${p.cl}" font-size="14" opacity=".7" font-family="Pretendard,sans-serif">${p.tg} · ${p.s}</text><text x="150" y="136" fill="${p.cl}" font-size="13" opacity=".5" font-family="Pretendard,sans-serif">${p.bn}</text></svg>`;
+}
+
+// ===== 메뉴 빌드 =====
+function buildMenu(){
+  document.getElementById('menu-block').innerHTML=CATS.map((c,i)=>`<div class="m-group"><div class="m-head" id="mh-${i}" onclick="openCat(${i})"><i class="ti ${c.icon} mh-icon" style="color:${c.color}"></i><span class="mh-label">${c.label}</span></div></div>`).join('');
+}
+buildMenu();
+
+// ===== 햄버거 메뉴 =====
+function handleHamburger(){
+  if(!sideOpen){sideOpen=true;document.getElementById('sidebar').classList.remove('collapsed');goHome();}
+  else{sideOpen=false;document.getElementById('sidebar').classList.add('collapsed');}
+}
+
+// ===== 로고 클릭 =====
+document.getElementById('logo-btn').addEventListener('click',()=>{goHome();resetSteps();document.getElementById('search-inp').value='';});
+
+// ===== 카테고리 열기 =====
+function openCat(i){
+  document.querySelectorAll('.m-head').forEach(h=>h.classList.remove('active'));
+  document.getElementById('mh-'+i).classList.add('active');
+  const cat=CATS[i];
+  document.getElementById('cat-icon').className='ti '+cat.icon;
+  document.getElementById('cat-icon').style.color=cat.color;
+  document.getElementById('cat-title').textContent=cat.label;
+  document.getElementById('cat-sub').textContent=cat.sub;
+  document.getElementById('cat-policy-list').innerHTML=DB.filter(cat.filter).map(makePCard).join('');
+  prevView='cat';showView('cat');
+}
+
+// ===== 정책 카드 =====
+function makePCard(p){
+  return `<div class="pcard" onclick="showDetail('${p.t.replace(/'/g,"\\'")}')"><div class="pcard-top"><span class="tag b-${p.c}">${p.c}</span><span class="tag t-${p.s}">${p.s}</span></div><div class="pcard-title">${p.t}</div><div class="pcard-desc">${p.d}</div><div class="pcard-meta"><span class="meta-item"><i class="ti ti-user"></i>${p.tg}</span></div></div>`;
+}
+
+// ===== 뷰 전환 =====
+function showView(v){document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));document.getElementById('view-'+v).classList.add('active');if(v==='home')document.querySelectorAll('.m-head').forEach(h=>h.classList.remove('active'));}
+function goHome(){prevView='home';showView('home');}
+
+// ===== 상세 페이지 =====
+function showDetail(title){
+  const p=DB.find(x=>x.t===title);if(!p)return;
+  document.getElementById('dt-title').textContent=p.t;
+  document.getElementById('dt-tags').innerHTML=`<span class="tag b-${p.c}">${p.c}</span><span class="tag t-${p.s}">${p.s}</span>`;
+  document.getElementById('dt-banner').innerHTML=makeBanner(p);
+  document.getElementById('dt-desc').textContent=p.desc;
+  document.getElementById('dt-benefit').textContent=p.bn;
+  document.getElementById('dt-target').textContent=p.tg;
+  document.getElementById('dt-apply').textContent=p.ap;
+  document.getElementById('dt-link').href=p.lk;
+  prevView=document.querySelector('.view.active')?.id?.replace('view-','')||'home';
+  showView('detail');
+}
+function goBack(){showView(prevView==='detail'?'cat':prevView);}
+
+// ===== 검색 =====
+function scoreMatch(p,q){
+  const ql=q.toLowerCase();let score=0;
+  if(p.t.toLowerCase().includes(ql))score+=10;
+  if(p.t.toLowerCase().startsWith(ql))score+=5;
+  if(p.d.toLowerCase().includes(ql))score+=3;
+  if(p.tg.toLowerCase().includes(ql))score+=3;
+  if(p.c.includes(ql))score+=2;
+  p.g.forEach(g=>{if(g.toLowerCase().includes(ql))score+=2;});
+  return score;
+}
+
+document.getElementById('search-inp').addEventListener('input',onSearchInput);
+document.getElementById('search-inp').addEventListener('focus',openDrop);
+document.getElementById('search-inp').addEventListener('blur',()=>setTimeout(closeDrop,200));
+document.getElementById('search-inp').addEventListener('keydown',e=>{if(e.key==='Enter')executeSearch();});
+
+function onSearchInput(){
+  const q=document.getElementById('search-inp').value.trim();
+  const drop=document.getElementById('drop-body');
+  if(!q){
+    drop.innerHTML='<div class="sd-section"><div class="sd-label">추천 검색어</div>'+['월세','취업','창업','상담','저축','교육'].map(w=>`<div class="sd-item" onmousedown="document.getElementById('search-inp').value='${w}';executeSearch()"><i class="ti ti-search"></i>${w}</div>`).join('')+'</div>';
+    return;
+  }
+  const scored=DB.map(p=>({p,score:scoreMatch(p,q)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,8);
+  if(!scored.length){drop.innerHTML='<div class="sd-section"><div class="sd-no">검색 결과가 없어요</div></div>';return;}
+  drop.innerHTML='<div class="sd-section"><div class="sd-label">연관 정책</div>'+scored.map(x=>`<div class="sd-item" onmousedown="showDetail('${x.p.t.replace(/'/g,"\\'")}');closeDrop()"><i class="ti ti-file-text"></i>${x.p.t}<span class="sd-badge b-${x.p.c}">${x.p.c}</span></div>`).join('')+'</div><div class="sd-section"><div class="sd-hint" onmousedown="executeSearch()">Enter로 전체 검색 결과 보기</div></div>';
+}
+
+function executeSearch(){
+  const q=document.getElementById('search-inp').value.trim();if(!q)return;
+  const scored=DB.map(p=>({p,score:scoreMatch(p,q)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
+  document.getElementById('search-result-label').textContent=`"${q}" 검색 결과 ${scored.length}건`;
+  document.getElementById('search-policy-list').innerHTML=scored.length?scored.map(x=>makePCard(x.p)).join(''):'<div style="font-size:14px;color:var(--text-tertiary);padding:24px 0;">검색 결과가 없어요.</div>';
+  prevView='search';showView('search');
+  document.querySelectorAll('.m-head').forEach(h=>h.classList.remove('active'));
+  closeDrop();
+}
+
+function openDrop(){document.getElementById('search-drop').classList.add('open');onSearchInput();}
+function closeDrop(){document.getElementById('search-drop').classList.remove('open');}
+
+// ===== 단계별 찾기 =====
+function goStep(n){[1,2,3,4].forEach(i=>{
+  document.getElementById('p'+i).classList.toggle('active',i===n);
+  const sn=document.getElementById('sn'+i),sl=document.getElementById('sl'+i);
+  sn.classList.toggle('done',i<n);sn.classList.toggle('cur',i===n);sl.classList.toggle('cur',i===n);
+  if(i<n)sn.textContent='✓';else if(i<4)sn.textContent=i;else sn.textContent='✓';
+});}
+function pick(el,val){el.closest('.opt-grid').querySelectorAll('.opt').forEach(o=>o.classList.remove('on'));el.classList.add('on');selR=val;document.getElementById('n1').disabled=false;}
+function pickAge(el,val){el.closest('.age-row').querySelectorAll('.age-btn').forEach(b=>b.classList.remove('on'));el.classList.add('on');selA=val;document.getElementById('n2').disabled=false;}
+function tog(el,val){el.classList.toggle('on');selG=Array.from(document.querySelectorAll('.genre-btn.on')).map(b=>b.textContent.trim());document.getElementById('n3').disabled=selG.length===0;}
+function showResult(){
+  goStep(4);
+  const m=DB.filter(p=>{const rOk=p.r.includes(selR)||p.r.includes('전국')||selR==='전국';return rOk&&p.a.includes(selA)&&selG.some(g=>p.g.includes(g));});
+  document.getElementById('rlabel').textContent='추천 정책 '+m.length+'개';
+  document.getElementById('rgrid').innerHTML=m.length?m.map(p=>`<div class="rcard" onclick="showDetail('${p.t.replace(/'/g,"\\'")}')"><div class="rcard-top"><span class="tag b-${p.c}">${p.c}</span><div class="dot-g"></div></div><div class="rt">${p.t}</div><div class="rd">${p.d}</div></div>`).join(''):'<div style="font-size:14px;color:var(--text-tertiary);padding:24px 0;">조건에 맞는 정책이 없어요.</div>';
+}
+function resetSteps(){selR='';selA='';selG=[];document.querySelectorAll('.opt,.age-btn,.genre-btn').forEach(el=>el.classList.remove('on'));['n1','n2','n3'].forEach(id=>document.getElementById(id).disabled=true);goStep(1);}
+</script>
+
+</body>
+</html>
