@@ -1176,7 +1176,7 @@ function sR(){
     var aOk=p.a.indexOf(sAv)>=0;
     var iOk=!p.inc||sIv==="무관"||p.inc.indexOf(sIv)>=0||p.inc.indexOf("무관")>=0;
     var gOk=sGv.some(function(g){return p.g.indexOf(g)>=0;});
-    return rOk&&aOk&&iOk&&gOk;
+    return rOk&&guOk(p)&&aOk&&iOk&&gOk;
   });
   // Sort: eligible first
   m.sort(function(a,b){
