@@ -28,10 +28,15 @@
 .hb{display:flex;align-items:center;gap:10px;padding:12px 14px 9px;cursor:pointer;border-bottom:1px solid var(--b3)}.hb i{font-size:19px;color:var(--t2)}.hl{font-size:13px;font-weight:500;color:var(--t2)}.side.c .hl{display:none}
 .mbb{overflow-y:auto;flex:1}.mg{border-bottom:1px solid var(--b3)}
 .mh{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background .1s}.mh:hover{background:var(--bg2)}.mh.on{background:var(--bg3)}.mh.on .ml{color:var(--ac);font-weight:600}.mh.on .mi{color:var(--ac)}
-.mi{font-size:17px;color:var(--t2)}.ml{font-size:13px;color:var(--t2)}.side.c .ml{display:none}.side.c .mh{justify-content:center;padding:10px 0}.side.c .cmpbar{display:none!important}
+.mi{font-size:17px;color:var(--t2)}.ml{font-size:13px;color:var(--t2)}.side.c .ml{display:none}.side.c .mh{justify-content:center;padding:10px 0}.side.c .cmpbar{padding:6px 0}.side.c .cmpbar-full{display:none}.side.c .cmpbar-icon{display:flex}
 .cmpbar{border-top:1px solid var(--b3);padding:10px 14px;background:var(--bg2);display:none;overflow:hidden}.cmpbar.show{display:block}
 .cmpbar p{font-size:12px;color:var(--t2);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cmpbtn{width:100%;padding:7px;background:var(--ac);color:#fff;border:none;border-radius:var(--r);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit}
 .cmpcnt{font-size:11px;color:var(--t3);margin-top:4px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cmpcnt:hover{color:var(--ac)}
+.cmpbar-icon{display:none;flex-direction:column;align-items:center;gap:4px;cursor:pointer;width:100%}
+.cmpbar-icon-btn{width:32px;height:32px;background:var(--ac);border-radius:var(--r);display:flex;align-items:center;justify-content:center;position:relative}
+.cmpbar-icon-btn i{font-size:16px;color:#fff}
+.cmp-badge{position:absolute;top:-6px;right:-6px;background:#e53935;color:#fff;font-size:9px;font-weight:700;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center}
+.cmpbar-full{display:block}
 .main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
 .vw{display:none;flex:1;padding:24px 28px;overflow-y:auto}.vw.on{display:flex;flex-direction:column}
 .mt{font-size:19px;font-weight:600;margin-bottom:4px}.ms{font-size:13px;color:var(--t2);margin-bottom:22px}
@@ -124,7 +129,19 @@
   <div class="side" id="sb">
     <div class="hb" onclick="hbg()"><i class="ti ti-menu-2"></i><span class="hl">메뉴</span></div>
     <div class="mbb" id="mbk"></div>
-    <div class="cmpbar" id="cmpbar"><p>비교함</p><button class="cmpbtn" onclick="showCmp()">선택한 정책 비교하기</button><div class="cmpcnt" id="cmpcnt" onclick="clearCmp()"></div></div>
+    <div class="cmpbar" id="cmpbar">
+  <div class="cmpbar-full">
+    <p>비교함</p>
+    <button class="cmpbtn" onclick="showCmp()">선택한 정책 비교하기</button>
+    <div class="cmpcnt" id="cmpcnt" onclick="clearCmp()"></div>
+  </div>
+  <div class="cmpbar-icon" onclick="showCmp()" title="정책 비교하기">
+    <div class="cmpbar-icon-btn">
+      <i class="ti ti-arrows-diff"></i>
+      <span class="cmp-badge" id="cmp-badge">0</span>
+    </div>
+  </div>
+</div>
   </div>
   <div class="main">
     <div class="vw on" id="v-home">
